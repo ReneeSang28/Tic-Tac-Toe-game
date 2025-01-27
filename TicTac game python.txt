@@ -1,0 +1,95 @@
+import tkinter as tk
+from tkinter import messagebox
+
+# Function to check for a winner
+def check_winner():
+    for row in range(3):
+        if buttons[row][0]["text"] == buttons[row][1]["text"] == buttons[row][2]["text"] != "":
+            highlight_winner([(row, 0), (row, 1), (row, 2)])
+            return True
+
+    for col in range(3):
+        if buttons[0][col]["text"] == buttons[1][col]["text"] == buttons[2][col]["text"] != "":
+            highlight_winner([(0, col), (1, col), (2, col)])
+            return True
+
+    if buttons[0][0]["text"] == buttons[1][1]["text"] == buttons[2][2]["text"] != "":
+        highlight_winner([(0, 0), (1, 1), (2, 2)])
+        return True
+
+    if buttons[0][2]["text"] == buttons[1][1]["text"] == buttons[2][0]["text"] != "":
+        highlight_winner([(0, 2), (1, 1), (2, 0)])
+        return True
+
+    return False
+
+# Function to highlight the winning combination
+def highlight_winner(winning_positions):
+    for row, col in winning_positions:
+        buttons[row][col].config(bg="lightgreen")
+    messagebox.showinfo("Tic-Tac-Toe", f"Player {current_player} wins!")
+    reset_game()
+
+# Function to check for a draw
+def check_draw():
+    for row in buttons:
+        for button in row:
+            if button["text"] == "":
+                return False
+    messagebox.showinfo("Tic-Tac-Toe", "It's a draw!")
+    reset_game()
+    return True
+
+# Function to handle button clicks
+def button_click(row, col):
+    global current_player
+    if buttons[row][col]["text"] == "":
+        buttons[row][col]["text"] = current_player
+        if check_winner():
+            return
+        if not check_draw():
+            current_player = "O" if current_player == "X" else "X"
+            label.config(text=f"Player {current_player}'s Turn")
+
+# Function to reset the game
+def reset_game():
+    global current_player
+    current_player = "X"
+    for row in buttons:
+        for button in row:
+            button.config(text="", bg="SystemButtonFace")
+    label.config(text="Player X's Turn")
+
+# Create the main window
+root = tk.Tk()
+root.title("Tic-Tac-Toe")
+
+current_player = "X"
+
+# Create a label to display the current player's turn
+label = tk.Label(root, text="Player X's Turn", font=("Helvetica", 14))
+label.pack()
+
+# Create a frame to hold the buttons
+frame = tk.Frame(root)
+frame.pack()
+
+# Create buttons for the game board
+buttons = []
+for row in range(3):
+    button_row = []
+    for col in range(3):
+        button = tk.Button(frame, text="", font=("Helvetica", 20), height=2, width=5,
+                           command=lambda r=row, c=col: button_click(r, c))
+        button.grid(row=row, column=col)
+        button_row.append(button)
+    buttons.append(button_row)
+
+# Create a reset button
+reset_button = tk.Button(root, text="Reset", font=("Helvetica", 12), command=reset_game)
+reset_button.pack(pady=10)
+
+# Run the application
+root.mainloop()
+
+TicTac Toe game code python
