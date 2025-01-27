@@ -91,5 +91,3 @@ reset_button.pack(pady=10)
 
 # Run the application
 root.mainloop()
-
-TicTac Toe game code python
